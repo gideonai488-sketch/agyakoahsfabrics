@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 195 20% 97%;
+    --foreground: 230 30% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 230 30% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 30% 15%;
+
+    --primary: 175 55% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 195 15% 93%;
+    --secondary-foreground: 230 30% 15%;
+
+    --muted: 195 15% 93%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 280 40% 80%;
+    --accent-foreground: 280 40% 20%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 100% / 0.4;
+    --input: 0 0% 100% / 0.5;
+    --ring: 175 55% 45%;
+
+    --radius: 1.5rem;
+
+    --mint-400: 170 60% 55%;
+    --mint-500: 170 65% 45%;
+    --teal-500: 180 60% 40%;
+    --violet-soft: 280 40% 80%;
+    --glass-bg: 0 0% 100% / 0.3;
+    --glass-border: 0 0% 100% / 0.5;
+    --glass-shadow: 231 63% 33% / 0.07;
+    --glass-blur: 20px;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Satoshi', 'Geist Sans', -apple-system, sans-serif;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply relative overflow-hidden rounded-[24px] p-4 backdrop-blur-xl transition-all;
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 8px 32px 0 hsl(var(--glass-shadow));
+  }
+
+  .glass-card:hover {
+    background: hsl(0 0% 100% / 0.5);
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .glass-modal {
+    @apply backdrop-blur-2xl rounded-[32px];
+    background: hsl(0 0% 100% / 0.6);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: 0 24px 80px 0 hsl(var(--glass-shadow));
+  }
+
+  .liquid-button {
+    @apply h-12 w-full rounded-full font-semibold transition-all active:scale-95;
+    background: linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)));
+    color: white;
+    box-shadow: 0 0 20px hsl(170 60% 55% / 0.3);
+  }
+
+  .liquid-button:hover {
+    box-shadow: 0 0 30px hsl(170 60% 55% / 0.5);
+  }
+
+  .liquid-button-sm {
+    @apply h-9 rounded-full px-4 text-sm font-semibold transition-all active:scale-95;
+    background: linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)));
+    color: white;
+    box-shadow: 0 0 12px hsl(170 60% 55% / 0.3);
+  }
+
+  .glass-input {
+    @apply w-full rounded-2xl px-4 py-3 outline-none transition-all;
+    background: hsl(0 0% 100% / 0.4);
+    border: 1px solid hsl(0 0% 100% / 0.3);
+    backdrop-filter: blur(12px);
+  }
+
+  .glass-input:focus {
+    border-color: hsl(var(--primary) / 0.5);
+    backdrop-filter: blur(24px);
+    background: hsl(0 0% 100% / 0.6);
+  }
+
+  .badge-dr {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider;
+    background: linear-gradient(135deg, hsl(var(--mint-400) / 0.2), hsl(var(--teal-500) / 0.2));
+    color: hsl(var(--teal-500));
+    border: 1px solid hsl(var(--mint-400) / 0.3);
+  }
+
+  .badge-stock {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold;
+    background: hsl(0 84% 60% / 0.1);
+    color: hsl(0 84% 50%);
+  }
+
+  .badge-sale {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold;
+    background: linear-gradient(135deg, hsl(350 80% 55%), hsl(20 90% 55%));
+    color: white;
+  }
+
+  .price-tag {
+    @apply text-lg font-bold tabular-nums;
+    color: hsl(var(--foreground));
+  }
+
+  .price-original {
+    @apply text-xs line-through tabular-nums;
+    color: hsl(var(--muted-foreground));
+  }
+}
+
+/* Background mesh gradient */
+.mesh-bg {
+  background: 
+    radial-gradient(ellipse at 20% 50%, hsl(175 55% 45% / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(280 40% 80% / 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsl(195 60% 80% / 0.08) 0%, transparent 50%),
+    hsl(var(--background));
+}
+
+/* Splash screen */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.logo-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--primary)) 25%,
+    hsl(var(--accent)) 50%,
+    hsl(var(--primary)) 75%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scan-line {
+  animation: scan-line 1.5s ease-in-out infinite;
+}
