@@ -6,43 +6,43 @@
 
 @layer base {
   :root {
-    --background: 195 20% 97%;
-    --foreground: 230 30% 15%;
+    --background: 36 33% 96%;
+    --foreground: 22 25% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 230 30% 15%;
+    --card-foreground: 22 25% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 230 30% 15%;
+    --popover-foreground: 22 25% 16%;
 
-    --primary: 175 55% 45%;
+    --primary: 30 74% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 195 15% 93%;
-    --secondary-foreground: 230 30% 15%;
+    --secondary: 35 24% 91%;
+    --secondary-foreground: 22 25% 16%;
 
-    --muted: 195 15% 93%;
+    --muted: 35 20% 90%;
     --muted-foreground: 220 10% 45%;
 
-    --accent: 280 40% 80%;
-    --accent-foreground: 280 40% 20%;
+    --accent: 156 37% 39%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 100% / 0.4;
     --input: 0 0% 100% / 0.5;
-    --ring: 175 55% 45%;
+    --ring: 30 74% 48%;
 
     --radius: 1.5rem;
 
-    --mint-400: 170 60% 55%;
-    --mint-500: 170 65% 45%;
-    --teal-500: 180 60% 40%;
-    --violet-soft: 280 40% 80%;
+    --mint-400: 39 88% 58%;
+    --mint-500: 30 74% 48%;
+    --teal-500: 156 37% 39%;
+    --violet-soft: 42 58% 84%;
     --glass-bg: 0 0% 100% / 0.3;
     --glass-border: 0 0% 100% / 0.5;
-    --glass-shadow: 231 63% 33% / 0.07;
+    --glass-shadow: 25 45% 28% / 0.08;
     --glass-blur: 20px;
 
     --sidebar-background: 0 0% 98%;
@@ -165,9 +165,9 @@
 /* Background mesh gradient */
 .mesh-bg {
   background: 
-    radial-gradient(ellipse at 20% 50%, hsl(175 55% 45% / 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(280 40% 80% / 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, hsl(195 60% 80% / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 50%, hsl(var(--primary) / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(var(--accent) / 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsl(var(--mint-400) / 0.08) 0%, transparent 50%),
     hsl(var(--background));
 }
 

@@ -25,24 +25,29 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Tooth silhouette with scan */}
+        {/* Fabric stack with scan */}
         <motion.div
           className="relative mb-8"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
         >
-          <svg width="80" height="96" viewBox="0 0 80 96" fill="none" className="drop-shadow-lg">
-            <path
-              d="M40 4C28 4 20 12 16 20C12 28 8 40 12 52C16 64 20 76 24 84C28 92 32 92 36 84C38 78 40 72 40 72C40 72 42 78 44 84C48 92 52 92 56 84C60 76 64 64 68 52C72 40 68 28 64 20C60 12 52 4 40 4Z"
-              fill="url(#toothGradient)"
-              stroke="hsl(175, 55%, 45%)"
-              strokeWidth="1.5"
-            />
+          <svg width="92" height="92" viewBox="0 0 92 92" fill="none" className="drop-shadow-lg">
+            <rect x="12" y="18" width="68" height="16" rx="8" fill="url(#fabricGradient1)" stroke="hsl(var(--teal-500))" strokeWidth="1.5" />
+            <rect x="18" y="38" width="56" height="16" rx="8" fill="url(#fabricGradient2)" stroke="hsl(var(--primary))" strokeWidth="1.5" />
+            <rect x="24" y="58" width="44" height="16" rx="8" fill="url(#fabricGradient3)" stroke="hsl(var(--teal-500))" strokeWidth="1.5" />
             <defs>
-              <linearGradient id="toothGradient" x1="12" y1="4" x2="68" y2="92">
-                <stop offset="0%" stopColor="white" />
-                <stop offset="100%" stopColor="hsl(195, 20%, 92%)" />
+              <linearGradient id="fabricGradient1" x1="12" y1="18" x2="80" y2="34">
+                <stop offset="0%" stopColor="hsl(var(--primary) / 0.95)" />
+                <stop offset="100%" stopColor="hsl(var(--mint-400) / 0.95)" />
+              </linearGradient>
+              <linearGradient id="fabricGradient2" x1="18" y1="38" x2="74" y2="54">
+                <stop offset="0%" stopColor="hsl(var(--accent) / 0.92)" />
+                <stop offset="100%" stopColor="hsl(var(--teal-500) / 0.95)" />
+              </linearGradient>
+              <linearGradient id="fabricGradient3" x1="24" y1="58" x2="68" y2="74">
+                <stop offset="0%" stopColor="hsl(var(--mint-400) / 0.92)" />
+                <stop offset="100%" stopColor="hsl(var(--foreground) / 0.85)" />
               </linearGradient>
             </defs>
           </svg>
@@ -68,7 +73,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           animate={{ opacity: phase === "reveal" || phase === "scan" ? 1 : 0, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          Dr. Smile Confident
+          Agyakoahs Fabrics
         </motion.h1>
 
         <motion.p
@@ -77,7 +82,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          Professional grade. Bathroom shelf approved.
+          Premium fabrics for every statement look.
         </motion.p>
       </motion.div>
     </AnimatePresence>

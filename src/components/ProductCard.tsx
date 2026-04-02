@@ -45,7 +45,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
         />
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {product.badge === "dr-recommended" && (
-            <span className="badge-dr">🩺 Dr. Pick</span>
+            <span className="badge-dr">✨ Staff Pick</span>
           )}
           {product.badge === "hot" && (
             <span className="badge-sale">🔥 HOT</span>
@@ -56,7 +56,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
         </div>
         {product.stock && product.stock < 20 && (
           <span className="badge-stock absolute bottom-2 left-2">
-            Only {product.stock} left
+            Only {product.stock} rolls left
           </span>
         )}
       </div>

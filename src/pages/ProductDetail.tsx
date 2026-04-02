@@ -48,7 +48,7 @@ const ProductDetail = () => {
         >
           <ArrowLeft className="h-4 w-4 text-foreground" strokeWidth={1.5} />
         </button>
-        <h1 className="text-sm font-semibold text-foreground">Product Details</h1>
+        <h1 className="text-sm font-semibold text-foreground">Fabric Details</h1>
         <button
           onClick={() => setLiked(!liked)}
           className="flex h-9 w-9 items-center justify-center rounded-full active:scale-90"
@@ -79,7 +79,7 @@ const ProductDetail = () => {
         {/* Badges */}
         <div className="absolute left-6 top-20 flex flex-col gap-1">
           {product.badge === "dr-recommended" && (
-            <span className="badge-dr">🩺 Dr. Pick</span>
+            <span className="badge-dr">✨ Staff Pick</span>
           )}
           {product.badge === "hot" && <span className="badge-sale">🔥 HOT</span>}
           {product.badge === "sale" && discount > 0 && (
@@ -134,7 +134,7 @@ const ProductDetail = () => {
 
         {product.stock && product.stock < 20 && (
           <p className="mt-2 text-xs font-medium" style={{ color: "hsl(0, 84%, 55%)" }}>
-            ⚡ Only {product.stock} left in stock!
+            ⚡ Only {product.stock} rolls left in stock!
           </p>
         )}
       </motion.div>
@@ -148,7 +148,7 @@ const ProductDetail = () => {
       >
         <h3 className="mb-2 text-sm font-bold text-foreground">Description</h3>
         <p className="text-xs leading-relaxed text-muted-foreground">
-          {product.description || "High quality dental care product for a brighter, healthier smile."}
+          {product.description || "Premium fabric with rich texture, strong finish, and elegant drape for custom styling."}
         </p>
       </motion.div>
 
@@ -161,8 +161,8 @@ const ProductDetail = () => {
       >
         <div className="grid grid-cols-3 gap-3">
           {[
-            { icon: Truck, label: "Free\nDelivery" },
-            { icon: Shield, label: "Quality\nGuarantee" },
+            { icon: Truck, label: "Nationwide\nDelivery" },
+            { icon: Shield, label: "Premium\nQuality" },
             { icon: RotateCcw, label: "Easy\nReturns" },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-1.5 py-2">
