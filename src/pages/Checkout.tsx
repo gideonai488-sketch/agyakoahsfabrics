@@ -59,8 +59,8 @@ const Checkout = () => {
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 15 }} className="mb-6 flex h-24 w-24 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))" }}>
           <span className="text-4xl">✨</span>
         </motion.div>
-        <h1 className="text-2xl font-bold text-foreground">Order Confirmed!</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Delivering to {address.city || "your location"}, {address.region}</p>
+         <h1 className="text-2xl font-bold text-foreground">Order Confirmed!</h1>
+         <p className="mt-2 text-sm text-muted-foreground">Your Agyakoahs fabrics order is headed to {address.city || "your location"}, {address.region}</p>
         <p className="mt-1 text-xs text-muted-foreground">Arriving in 3-5 business days</p>
         <button onClick={() => { clearCart(); navigate("/"); }} className="liquid-button mt-8 max-w-xs">Continue Shopping</button>
       </div>
@@ -73,7 +73,7 @@ const Checkout = () => {
         <button onClick={() => step === "payment" ? setStep("delivery") : navigate(-1)} className="flex h-9 w-9 items-center justify-center rounded-full active:scale-90" style={{ background: "hsl(0 0% 100% / 0.5)" }}>
           <ArrowLeft className="h-4 w-4 text-foreground" strokeWidth={1.5} />
         </button>
-        <h1 className="text-base font-bold text-foreground">{step === "delivery" ? "Delivery Address" : "Payment"}</h1>
+         <h1 className="text-base font-bold text-foreground">{step === "delivery" ? "Delivery Details" : "Payment"}</h1>
       </div>
 
       <div className="flex gap-2 px-4 py-4">
@@ -89,7 +89,7 @@ const Checkout = () => {
           <div className="space-y-3">
             <div className="glass-card">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-                <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} /> Delivery Location
+                 <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} /> Delivery Location
               </div>
               <div className="space-y-3">
                 <input placeholder="Recipient Name" value={address.name} onChange={(e) => setAddress({ ...address, name: e.target.value })} className="glass-input text-sm text-foreground placeholder:text-muted-foreground" />
@@ -108,7 +108,7 @@ const Checkout = () => {
               </div>
               <label className="flex items-center justify-between rounded-xl p-3 cursor-pointer" style={{ background: "hsl(170 60% 55% / 0.08)", border: "1px solid hsl(170 60% 55% / 0.2)" }}>
                 <div>
-                  <p className="text-xs font-medium text-foreground">Standard Delivery</p>
+                   <p className="text-xs font-medium text-foreground">Fabric-Safe Delivery</p>
                   <p className="text-[10px] text-muted-foreground">3-5 business days</p>
                 </div>
                 <span className="text-sm font-semibold text-foreground">GH₵{shipping.toFixed(2)}</span>
@@ -133,7 +133,7 @@ const Checkout = () => {
             </div>
             <div className="glass-card">
               <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
-                <Shield className="h-4 w-4 text-primary" strokeWidth={1.5} /> Order Summary
+                 <Shield className="h-4 w-4 text-primary" strokeWidth={1.5} /> Fabric Order Summary
               </div>
               {items.map((item) => (
                 <div key={item.product.id} className="flex items-center justify-between py-1.5">

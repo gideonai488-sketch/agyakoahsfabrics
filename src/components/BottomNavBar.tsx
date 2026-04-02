@@ -7,7 +7,7 @@ const tabs = [
   { icon: Home, label: "Home", path: "/" },
   { icon: ClipboardList, label: "Orders", path: "/orders" },
   { icon: ShoppingCart, label: "Cart", path: "cart" },
-  { icon: ShoppingBag, label: "Shop", path: "/shop" },
+  { icon: ShoppingBag, label: "Catalog", path: "/shop" },
   { icon: User, label: "Profile", path: "/profile" },
 ];
 

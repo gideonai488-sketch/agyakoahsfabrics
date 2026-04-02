@@ -22,10 +22,10 @@ const StoreHeader = () => {
     >
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))" }}>
-            <span className="text-sm font-bold" style={{ color: "white" }}>D</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)))" }}>
+            <span className="text-sm font-bold" style={{ color: "white" }}>A</span>
           </div>
-          <span className="text-base font-bold tracking-tight text-foreground">Dr. Smile</span>
+          <span className="text-base font-bold tracking-tight text-foreground">Agyakoahs Fabrics</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ const StoreHeader = () => {
           <button
             onClick={() => setAuthOpen(true)}
             className="flex h-9 w-9 items-center justify-center rounded-full transition-all active:scale-95"
-            style={{ background: user ? "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))" : "hsl(0 0% 100% / 0.5)" }}
+            style={{ background: user ? "linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)))" : "hsl(0 0% 100% / 0.5)" }}
           >
             <User className="h-4 w-4" strokeWidth={1.5} style={{ color: user ? "white" : "hsl(220,10%,45%)" }} />
           </button>

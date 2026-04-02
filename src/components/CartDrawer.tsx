@@ -31,7 +31,7 @@ const CartDrawer = () => {
             </div>
 
             <div className="flex items-center justify-between px-5 pb-3 pt-4">
-              <h2 className="text-lg font-bold text-foreground">Your Cart</h2>
+              <h2 className="text-lg font-bold text-foreground">Fabric Cart</h2>
               <button onClick={() => setCartOpen(false)} className="rounded-full p-1 active:scale-90" style={{ background: "hsl(0 0% 100% / 0.5)" }}>
                 <X className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
               </button>
@@ -42,7 +42,7 @@ const CartDrawer = () => {
                 <div className="flex flex-col items-center py-12 text-muted-foreground">
                   <ShoppingBag className="mb-3 h-12 w-12 opacity-30" strokeWidth={1} />
                   <p className="text-sm">Your cart is empty</p>
-                  <p className="text-xs">Your enamel will thank you.</p>
+                  <p className="text-xs">Add a fabric roll or luxury cut to get started.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -100,7 +100,7 @@ const CartDrawer = () => {
                   onClick={() => { setCartOpen(false); navigate("/checkout"); }}
                   className="liquid-button"
                 >
-                  Secure Checkout
+                  Checkout Order
                 </button>
               </div>
             )}

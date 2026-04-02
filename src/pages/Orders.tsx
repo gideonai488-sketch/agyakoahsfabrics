@@ -36,7 +36,7 @@ const Orders = () => {
   return (
     <div className="min-h-screen mesh-bg pb-24">
       <div className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3 backdrop-blur-xl" style={{ background: "hsl(0 0% 100% / 0.6)", borderBottom: "1px solid hsl(0 0% 100% / 0.4)" }}>
-        <h1 className="text-base font-bold text-foreground">My Orders</h1>
+         <h1 className="text-base font-bold text-foreground">My Orders</h1>
       </div>
 
       {!user || orders.length === 0 ? (
@@ -45,7 +45,7 @@ const Orders = () => {
             <ClipboardList className="h-8 w-8" style={{ color: "hsl(175, 55%, 45%)" }} strokeWidth={1.5} />
           </motion.div>
           <h2 className="text-lg font-bold text-foreground">No orders yet</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Your order history will appear here</p>
+          <p className="mt-1 text-sm text-muted-foreground">Your fabric order history will appear here</p>
         </div>
       ) : (
         <div className="px-4 py-4 space-y-3">

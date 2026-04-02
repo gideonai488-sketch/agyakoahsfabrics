@@ -28,7 +28,7 @@ const Profile = () => {
             <User className="h-8 w-8" style={{ color: "hsl(175, 55%, 45%)" }} strokeWidth={1.5} />
           </motion.div>
           <h2 className="text-lg font-bold text-foreground">Sign in to your account</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Track orders & manage your profile</p>
+          <p className="mt-1 text-sm text-muted-foreground">Track fabric orders & manage your profile</p>
           <button onClick={() => setOpen(true)} className="liquid-button mt-6 max-w-xs">
             Sign In / Sign Up
           </button>
@@ -51,7 +51,7 @@ const Profile = () => {
       <div className="px-4 py-6 space-y-4">
         {/* User Card */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))" }}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)))" }}>
             <span className="text-xl font-bold" style={{ color: "white" }}>
               {(profile?.full_name || user.email)?.[0]?.toUpperCase() || "U"}
             </span>
@@ -78,12 +78,12 @@ const Profile = () => {
             className="glass-card flex w-full items-center gap-3 active:scale-[0.98]"
             style={{ border: "1px solid hsl(170 60% 55% / 0.3)" }}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))" }}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)))" }}>
               <Shield className="h-5 w-5" style={{ color: "white" }} strokeWidth={1.5} />
             </div>
             <div className="flex-1 text-left">
               <p className="text-sm font-semibold text-foreground">Admin Portal</p>
-              <p className="text-[10px] text-muted-foreground">Manage orders, users & products</p>
+              <p className="text-[10px] text-muted-foreground">Manage orders, customers, analytics & catalog</p>
             </div>
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </motion.button>
