@@ -9,7 +9,7 @@ import AuthModal from "@/components/AuthModal";
 
 const Checkout = () => {
   const { items, total, clearCart } = useCartStore();
-  const { user, setOpen: setAuthOpen } = useAuthStore();
+  const { user, profile, setOpen: setAuthOpen } = useAuthStore();
   const navigate = useNavigate();
   const [step, setStep] = useState<"delivery" | "payment" | "success">("delivery");
   const [address, setAddress] = useState({ name: "", street: "", city: "", region: "", phone: "", landmark: "" });
@@ -24,31 +24,59 @@ const Checkout = () => {
       return;
     }
     setSubmitting(true);
-    const { data: order, error } = await supabase.from("orders").insert({
-      user_id: user.id,
-      status: "pending",
-      total_amount: grandTotal,
-      delivery_name: address.name,
-      delivery_phone: address.phone,
-      delivery_region: address.region,
-      delivery_city: address.city,
-      delivery_address: address.street,
-      delivery_landmark: address.landmark,
-      payment_method: "momo",
-    }).select().single();
 
-    if (order && !error) {
-      await supabase.from("order_items").insert(
-        items.map((item) => ({
-          order_id: order.id,
-          product_id: item.product.id,
-          product_name: item.product.name,
-          product_image: item.product.image,
-          quantity: item.quantity,
-          price: item.product.price,
-        }))
-      );
-      setStep("success");
+    try {
+      // Create order first
+      const { data: order, error } = await supabase.from("orders").insert({
+        user_id: user.id,
+        status: "pending",
+        total_amount: grandTotal,
+        delivery_name: address.name,
+        delivery_phone: address.phone,
+        delivery_region: address.region,
+        delivery_city: address.city,
+        delivery_address: address.street,
+        delivery_landmark: address.landmark,
+        payment_method: "paystack",
+      }).select().single();
+
+      if (order && !error) {
+        await supabase.from("order_items").insert(
+          items.map((item) => ({
+            order_id: order.id,
+            product_id: item.product.id,
+            product_name: item.product.name,
+            product_image: item.product.image,
+            quantity: item.quantity,
+            price: item.product.price,
+          }))
+        );
+
+        // Initialize Paystack payment
+        const { data: paystackData } = await supabase.functions.invoke("paystack-initialize", {
+          body: {
+            email: profile?.email || user.email,
+            amount: grandTotal,
+            reference: `agyakoahs-${order.id}`,
+            callback_url: `${window.location.origin}/orders`,
+            metadata: {
+              order_id: order.id,
+              customer_name: address.name,
+            },
+          },
+        });
+
+        if (paystackData?.data?.authorization_url) {
+          // Redirect to Paystack checkout
+          window.location.href = paystackData.data.authorization_url;
+          return;
+        } else {
+          // Fallback to success if Paystack fails
+          setStep("success");
+        }
+      }
+    } catch (err) {
+      console.error("Order error:", err);
     }
     setSubmitting(false);
   };
@@ -119,16 +147,15 @@ const Checkout = () => {
           <div className="space-y-3">
             <div className="glass-card">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-                <CreditCard className="h-4 w-4 text-primary" strokeWidth={1.5} /> Payment Details
+                <CreditCard className="h-4 w-4 text-primary" strokeWidth={1.5} /> Payment via Paystack
               </div>
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  {["Mobile Money", "Card"].map((method) => (
-                    <button key={method} className="flex-1 rounded-xl py-2.5 text-xs font-semibold transition-all" style={{ background: "hsl(0 0% 100% / 0.5)", border: "1px solid hsl(0 0% 100% / 0.4)" }}>{method}</button>
-                  ))}
-                </div>
-                <input placeholder="Mobile Money / Card number" className="glass-input text-sm text-foreground placeholder:text-muted-foreground tabular-nums" />
-                <input placeholder="Account name" className="glass-input text-sm text-foreground placeholder:text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">
+                You'll be securely redirected to Paystack to complete payment via Mobile Money, Card, or Bank Transfer.
+              </p>
+              <div className="mt-3 flex gap-2">
+                {["Mobile Money", "Visa/Mastercard", "Bank Transfer"].map((method) => (
+                  <span key={method} className="rounded-full px-3 py-1.5 text-[10px] font-medium" style={{ background: "hsl(0 0% 100% / 0.5)", border: "1px solid hsl(0 0% 100% / 0.4)" }}>{method}</span>
+                ))}
               </div>
             </div>
             <div className="glass-card">
@@ -160,7 +187,7 @@ const Checkout = () => {
           className="liquid-button"
           disabled={submitting}
         >
-          {step === "delivery" ? "Continue to Payment" : submitting ? "Placing Order..." : `Pay GH₵${grandTotal.toFixed(2)}`}
+          {step === "delivery" ? "Continue to Payment" : submitting ? "Processing..." : `Pay GH₵${grandTotal.toFixed(2)} with Paystack`}
         </button>
       </div>
       <AuthModal />

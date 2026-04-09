@@ -28,7 +28,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
 
   return (
     <motion.div
-      className="glass-card cursor-pointer"
+      className="cursor-pointer overflow-hidden rounded-3xl bg-white shadow-sm"
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
@@ -36,11 +36,11 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
       onClick={() => navigate(`/product/${product.id}`)}
     >
       {/* Image */}
-      <div className="relative mb-3 overflow-hidden rounded-2xl" style={{ background: "hsl(0 0% 96%)" }}>
+      <div className="relative overflow-hidden" style={{ background: "#f8f8f8" }}>
         <img
           src={product.image}
           alt={product.name}
-          className="aspect-square w-full object-cover"
+          className="aspect-[4/5] w-full object-cover"
           loading="lazy"
         />
         <div className="absolute left-2 top-2 flex flex-col gap-1">
@@ -62,39 +62,41 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
       </div>
 
       {/* Info */}
-      <h3 className="mb-1 line-clamp-2 text-xs font-medium leading-tight text-foreground">
-        {product.name}
-      </h3>
+      <div className="p-3">
+        <h3 className="mb-1.5 line-clamp-2 text-sm font-semibold leading-tight text-foreground">
+          {product.name}
+        </h3>
 
-      {/* Rating */}
-      <div className="mb-1.5 flex items-center gap-1">
-        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-        <span className="text-[10px] text-muted-foreground">
-          {product.rating} · {product.sold.toLocaleString()} sold
-        </span>
-      </div>
-
-      {/* Price + Add */}
-      <div className="flex items-end justify-between">
-        <div>
-          <span className="price-tag text-sm">GH₵{product.price}</span>
-          {product.originalPrice && (
-            <span className="ml-1 price-original text-[10px]">GH₵{product.originalPrice}</span>
-          )}
+        {/* Rating */}
+        <div className="mb-2 flex items-center gap-1">
+          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+          <span className="text-xs text-muted-foreground">
+            {product.rating} · {product.sold.toLocaleString()} sold
+          </span>
         </div>
-        <motion.button
-          onClick={handleAdd}
-          className="flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-90"
-          style={{
-            background: added
-              ? "hsl(170, 60%, 45%)"
-              : "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))",
-            color: "white",
-          }}
-          whileTap={{ scale: 0.85 }}
-        >
-          <Plus className="h-4 w-4" strokeWidth={2.5} />
-        </motion.button>
+
+        {/* Price + Add */}
+        <div className="flex items-end justify-between">
+          <div>
+            <span className="price-tag text-base font-bold">GH₵{product.price}</span>
+            {product.originalPrice && (
+              <span className="ml-1.5 price-original text-xs">GH₵{product.originalPrice}</span>
+            )}
+          </div>
+          <motion.button
+            onClick={handleAdd}
+            className="flex h-9 w-9 items-center justify-center rounded-full transition-all active:scale-90"
+            style={{
+              background: added
+                ? "hsl(170, 60%, 45%)"
+                : "linear-gradient(135deg, hsl(170,60%,55%), hsl(180,60%,40%))",
+              color: "white",
+            }}
+            whileTap={{ scale: 0.85 }}
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );
