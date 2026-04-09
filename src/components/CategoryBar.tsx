@@ -1,12 +1,12 @@
-import { categories } from "@/data/products";
 import { motion } from "framer-motion";
 
 interface CategoryBarProps {
   selected: string;
   onSelect: (cat: string) => void;
+  categories?: string[];
 }
 
-const CategoryBar = ({ selected, onSelect }: CategoryBarProps) => (
+const CategoryBar = ({ selected, onSelect, categories = ["All"] }: CategoryBarProps) => (
   <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch" }}>
     {categories.map((cat) => (
       <motion.button
