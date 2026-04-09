@@ -5,8 +5,10 @@ import {
   ArrowLeft,
   BarChart3,
   Box,
+  Building2,
   ChevronDown,
   Crown,
+  Loader2,
   Package,
   ShoppingCart,
   TrendingUp,
@@ -25,6 +27,7 @@ const tabs = [
   { id: "customers", label: "Customers" },
   { id: "products", label: "Products" },
   { id: "analytics", label: "Analytics" },
+  { id: "bank", label: "Bank" },
 ] as const;
 
 type Tab = (typeof tabs)[number]["id"];
@@ -50,6 +53,11 @@ interface UserProfile {
   created_at: string;
 }
 
+interface Bank {
+  name: string;
+  code: string;
+}
+
 const statusColors: Record<string, string> = {
   pending: "hsl(var(--primary))",
   processing: "hsl(var(--mint-400))",
@@ -70,6 +78,16 @@ const Admin = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+
+  // Bank account state
+  const [banks, setBanks] = useState<Bank[]>([]);
+  const [bankCode, setBankCode] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [businessName, setBusinessName] = useState("Agyakoahs Fabrics");
+  const [resolvedName, setResolvedName] = useState("");
+  const [resolving, setResolving] = useState(false);
+  const [linking, setLinking] = useState(false);
+  const [bankMsg, setBankMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -100,6 +118,99 @@ const Admin = () => {
 
   const currency = (value: number) => `GH₵${value.toFixed(2)}`;
 
+  // Fetch banks when bank tab opens
+  useEffect(() => {
+    if (tab === "bank" && banks.length === 0) {
+      fetchBanks();
+    }
+  }, [tab]);
+
+  const fetchBanks = async () => {
+    try {
+      const { data } = await supabase.functions.invoke("paystack-bank", {
+        body: {},
+        headers: {},
+      });
+      // Use GET with query param
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paystack-bank?action=list-banks`,
+        {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+        }
+      );
+      const result = await res.json();
+      if (result?.data) {
+        setBanks(result.data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch banks:", e);
+    }
+  };
+
+  const resolveAccount = async () => {
+    if (!accountNumber || !bankCode) return;
+    setResolving(true);
+    setResolvedName("");
+    setBankMsg(null);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paystack-bank?action=resolve-account`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ account_number: accountNumber, bank_code: bankCode }),
+        }
+      );
+      const data = await res.json();
+      if (data?.data?.account_name) {
+        setResolvedName(data.data.account_name);
+      } else {
+        setBankMsg({ type: "error", text: "Could not resolve account. Check the number and bank." });
+      }
+    } catch {
+      setBankMsg({ type: "error", text: "Failed to verify account." });
+    }
+    setResolving(false);
+  };
+
+  const linkBankAccount = async () => {
+    if (!accountNumber || !bankCode || !resolvedName) return;
+    setLinking(true);
+    setBankMsg(null);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paystack-bank?action=create-subaccount`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            business_name: businessName,
+            bank_code: bankCode,
+            account_number: accountNumber,
+            percentage_charge: 0,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (data?.data?.subaccount_code) {
+        setBankMsg({ type: "success", text: `Bank linked! Subaccount: ${data.data.subaccount_code}. 100% of payments go to your account.` });
+      } else {
+        setBankMsg({ type: "error", text: data?.message || "Failed to link bank account." });
+      }
+    } catch {
+      setBankMsg({ type: "error", text: "Failed to create subaccount." });
+    }
+    setLinking(false);
+  };
+
   const overviewStats = useMemo(() => {
     const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_amount), 0);
     return {
@@ -115,12 +226,10 @@ const Admin = () => {
       const date = new Date();
       date.setMonth(date.getMonth() - (5 - index));
       date.setDate(1);
-
       const monthOrders = orders.filter((order) => {
         const orderDate = new Date(order.created_at);
         return orderDate.getMonth() === date.getMonth() && orderDate.getFullYear() === date.getFullYear();
       });
-
       return {
         label: date.toLocaleDateString("en-US", { month: "short" }),
         revenue: monthOrders.reduce((sum, order) => sum + Number(order.total_amount), 0),
@@ -174,7 +283,6 @@ const Admin = () => {
       acc[product.category] = (acc[product.category] || 0) + 1;
       return acc;
     }, {});
-
     return Object.entries(counts)
       .map(([category, count]) => ({ category, count }))
       .sort((a, b) => b.count - a.count);
@@ -211,7 +319,7 @@ const Admin = () => {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className="rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-all"
+            className="whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-all"
             style={{
               background: tab === t.id ? "linear-gradient(135deg, hsl(var(--mint-400)), hsl(var(--teal-500)))" : "hsl(0 0% 100% / 0.5)",
               color: tab === t.id ? "white" : "hsl(220,10%,45%)",
@@ -223,6 +331,7 @@ const Admin = () => {
       </div>
 
       <div className="px-4">
+        {/* OVERVIEW TAB */}
         {tab === "overview" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -258,10 +367,7 @@ const Admin = () => {
               <div className="glass-card">
                 <h3 className="mb-3 text-sm font-bold text-foreground">Order status</h3>
                 {statusData.length > 0 ? (
-                  <ChartContainer
-                    config={{ pending: { label: "Pending", color: statusColors.pending } }}
-                    className="h-[220px] w-full"
-                  >
+                  <ChartContainer config={{ pending: { label: "Pending", color: statusColors.pending } }} className="h-[220px] w-full">
                     <PieChart>
                       <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                       <Pie data={statusData} dataKey="value" nameKey="name" innerRadius={52} outerRadius={76} paddingAngle={3}>
@@ -315,6 +421,7 @@ const Admin = () => {
           </motion.div>
         )}
 
+        {/* ORDERS TAB */}
         {tab === "orders" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
             {orders.map((o) => (
@@ -335,7 +442,7 @@ const Admin = () => {
                 </button>
                 {expandedOrder === o.id && (
                   <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} className="border-t px-4 pb-4 pt-3" style={{ borderColor: "hsl(0 0% 100% / 0.2)" }}>
-                     <p className="mb-2 text-[10px] text-muted-foreground">Delivery to {o.delivery_city || "—"}, {o.delivery_region || "—"} · Payment: {o.payment_method || "momo"}</p>
+                    <p className="mb-2 text-[10px] text-muted-foreground">Delivery to {o.delivery_city || "—"}, {o.delivery_region || "—"} · Payment: {o.payment_method || "momo"}</p>
                     <div className="flex flex-wrap gap-2">
                       {["pending", "processing", "shipped", "delivered", "cancelled"].map((s) => (
                         <button
@@ -364,6 +471,7 @@ const Admin = () => {
           </motion.div>
         )}
 
+        {/* CUSTOMERS TAB */}
         {tab === "customers" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -400,6 +508,7 @@ const Admin = () => {
           </motion.div>
         )}
 
+        {/* PRODUCTS TAB */}
         {tab === "products" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -412,7 +521,6 @@ const Admin = () => {
                 <p className="mt-1 text-xl font-bold text-foreground">{categoryData.length}</p>
               </div>
             </div>
-
             {products.map((product) => (
               <div key={product.id} className="glass-card flex items-center gap-3">
                 <img src={product.image} alt={product.name} className="h-16 w-16 rounded-2xl object-cover" loading="lazy" width={64} height={64} />
@@ -432,6 +540,7 @@ const Admin = () => {
           </motion.div>
         )}
 
+        {/* ANALYTICS TAB */}
         {tab === "analytics" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
             <div className="glass-card">
@@ -486,6 +595,122 @@ const Admin = () => {
                     <span className="text-xs font-semibold text-foreground">{currency(product.price)}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* BANK ACCOUNT TAB */}
+        {tab === "bank" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+            <div className="glass-card">
+              <div className="mb-3 flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Link Bank Account</h3>
+                  <p className="text-[10px] text-muted-foreground">Receive 100% of payments — no split</p>
+                </div>
+              </div>
+
+              {bankMsg && (
+                <div
+                  className="mb-3 rounded-xl p-3 text-xs"
+                  style={{
+                    background: bankMsg.type === "success" ? "hsl(145 55% 36% / 0.1)" : "hsl(0 80% 55% / 0.1)",
+                    color: bankMsg.type === "success" ? "hsl(145 55% 36%)" : "hsl(0 80% 55%)",
+                  }}
+                >
+                  {bankMsg.text}
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground">Business Name</label>
+                  <input
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    className="glass-input text-sm text-foreground placeholder:text-muted-foreground"
+                    placeholder="Your business name"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground">Select Bank</label>
+                  <select
+                    value={bankCode}
+                    onChange={(e) => { setBankCode(e.target.value); setResolvedName(""); }}
+                    className="glass-input text-sm text-foreground"
+                  >
+                    <option value="">Choose a bank...</option>
+                    {banks.map((bank) => (
+                      <option key={bank.code} value={bank.code}>{bank.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-foreground">Account Number</label>
+                  <input
+                    value={accountNumber}
+                    onChange={(e) => { setAccountNumber(e.target.value); setResolvedName(""); }}
+                    className="glass-input text-sm text-foreground placeholder:text-muted-foreground"
+                    placeholder="Enter account number"
+                    maxLength={20}
+                  />
+                </div>
+
+                <button
+                  onClick={resolveAccount}
+                  disabled={!bankCode || !accountNumber || resolving}
+                  className="w-full rounded-2xl py-2.5 text-xs font-semibold transition-all active:scale-[0.98]"
+                  style={{
+                    background: "hsl(0 0% 100% / 0.6)",
+                    border: "1px solid hsl(0 0% 100% / 0.4)",
+                    opacity: !bankCode || !accountNumber ? 0.5 : 1,
+                  }}
+                >
+                  {resolving ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-3 w-3 animate-spin" /> Verifying...
+                    </span>
+                  ) : (
+                    "Verify Account"
+                  )}
+                </button>
+
+                {resolvedName && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl p-4" style={{ background: "hsl(145 55% 36% / 0.08)", border: "1px solid hsl(145 55% 36% / 0.2)" }}>
+                    <p className="text-xs text-muted-foreground">Account Name</p>
+                    <p className="mt-1 text-sm font-bold text-foreground">{resolvedName}</p>
+                  </motion.div>
+                )}
+
+                {resolvedName && (
+                  <button
+                    onClick={linkBankAccount}
+                    disabled={linking}
+                    className="liquid-button"
+                  >
+                    {linking ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Linking...
+                      </span>
+                    ) : (
+                      "Link Bank Account (100% Payout)"
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="glass-card">
+              <h3 className="mb-2 text-sm font-bold text-foreground">How it works</h3>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <p>1. Select your bank and enter your account number</p>
+                <p>2. Verify the account name matches</p>
+                <p>3. Link your account — all customer payments go directly to you</p>
+                <p>4. No split fees — you receive 100% of the payment amount</p>
               </div>
             </div>
           </motion.div>
