@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "@supabase/supabase-js/cors";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -29,7 +33,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         email,
-        amount: Math.round(amount * 100), // Paystack expects pesewas
+        amount: Math.round(amount * 100),
         currency: "GHS",
         reference,
         callback_url,

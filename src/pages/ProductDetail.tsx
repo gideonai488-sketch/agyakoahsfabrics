@@ -4,24 +4,29 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useAuthStore } from "@/store/authStore";
 import type { DbProduct } from "@/hooks/useProducts";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const addItem = useCartStore((s) => s.addItem);
+  const { user, setOpen: setAuthOpen } = useAuthStore();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [added, setAdded] = useState(false);
-  const [liked, setLiked] = useState(false);
   const [product, setProduct] = useState<DbProduct | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const liked = id ? isWishlisted(id) : false;
+
   useEffect(() => {
-    const fetch = async () => {
-      const { data } = await supabase.from("products").select("*").eq("id", id).single();
+    const fetchProduct = async () => {
+      const { data } = await supabase.from("products").select("*").eq("id", id).maybeSingle();
       setProduct(data as DbProduct | null);
       setLoading(false);
     };
-    fetch();
+    fetchProduct();
   }, [id]);
 
   if (loading) {
@@ -62,9 +67,14 @@ const ProductDetail = () => {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleWishlist = () => {
+    if (!user) { setAuthOpen(true); return; }
+    toggleWishlist(product.id);
+  };
+
   const imageUrl = product.image_url?.startsWith("http")
     ? product.image_url
-    : product.image_url || "/placeholder.svg";
+    : "/placeholder.svg";
 
   return (
     <div className="min-h-screen mesh-bg pb-28">
@@ -73,7 +83,7 @@ const ProductDetail = () => {
           <ArrowLeft className="h-4 w-4 text-foreground" strokeWidth={1.5} />
         </button>
         <h1 className="text-sm font-semibold text-foreground">Fabric Details</h1>
-        <button onClick={() => setLiked(!liked)} className="flex h-9 w-9 items-center justify-center rounded-full active:scale-90" style={{ background: "hsl(0 0% 100% / 0.5)" }}>
+        <button onClick={handleWishlist} className="flex h-9 w-9 items-center justify-center rounded-full active:scale-90" style={{ background: "hsl(0 0% 100% / 0.5)" }}>
           <Heart className="h-4 w-4 transition-colors" strokeWidth={1.5} fill={liked ? "hsl(350, 80%, 55%)" : "none"} color={liked ? "hsl(350, 80%, 55%)" : "hsl(220, 10%, 45%)"} />
         </button>
       </div>
@@ -101,8 +111,8 @@ const ProductDetail = () => {
             </>
           )}
         </div>
-        {product.stock && product.stock < 20 && (
-          <p className="mt-2 text-xs font-medium" style={{ color: "hsl(0, 84%, 55%)" }}>⚡ Only {product.stock} rolls left in stock!</p>
+        {product.stock != null && product.stock > 0 && product.stock < 20 && (
+          <p className="mt-2 text-xs font-medium text-destructive">⚡ Only {product.stock} rolls left in stock!</p>
         )}
       </motion.div>
 
@@ -119,8 +129,8 @@ const ProductDetail = () => {
             { icon: RotateCcw, label: "Easy\nReturns" },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-1.5 py-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "hsl(170 60% 55% / 0.1)" }}>
-                <Icon className="h-4 w-4" style={{ color: "hsl(175, 55%, 45%)" }} strokeWidth={1.5} />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "hsl(var(--primary) / 0.1)" }}>
+                <Icon className="h-4 w-4 text-primary" strokeWidth={1.5} />
               </div>
               <span className="whitespace-pre-line text-center text-[10px] font-medium text-muted-foreground">{label}</span>
             </div>
