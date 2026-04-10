@@ -11,6 +11,7 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import Orders from "./pages/Orders.tsx";
 import Profile from "./pages/Profile.tsx";
 import Admin from "./pages/Admin.tsx";
+import Wishlist from "./pages/Wishlist.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/orders" element={<Orders />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/shop" element={<Index />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
