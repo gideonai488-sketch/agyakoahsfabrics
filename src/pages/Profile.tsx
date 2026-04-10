@@ -73,6 +73,7 @@ const Profile = () => {
       title: "Support",
       items: [
         { icon: HelpCircle, label: "Help Center", desc: "FAQs & contact support", action: () => {} },
+        { icon: FileText, label: "Privacy Policy", desc: "How we handle your data", action: () => navigate("/privacy") },
         { icon: Star, label: "Rate the App", desc: "Share your feedback", action: () => {} },
       ],
     },
