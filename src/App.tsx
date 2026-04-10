@@ -39,7 +39,8 @@ const App = () => (
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/shop" element={<Index />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthInitializer>
