@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, LogOut, Shield, Package, ChevronRight, Mail, Phone, Heart, Edit2, MapPin, HelpCircle, Bell, Star, Clock } from "lucide-react";
+import { User, LogOut, Shield, Package, ChevronRight, Mail, Phone, Heart, Edit2, MapPin, HelpCircle, Bell, Star, Clock, FileText } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -73,6 +73,7 @@ const Profile = () => {
       title: "Support",
       items: [
         { icon: HelpCircle, label: "Help Center", desc: "FAQs & contact support", action: () => {} },
+        { icon: FileText, label: "Privacy Policy", desc: "How we handle your data", action: () => navigate("/privacy") },
         { icon: Star, label: "Rate the App", desc: "Share your feedback", action: () => {} },
       ],
     },

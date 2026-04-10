@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import StoreHeader from "@/components/StoreHeader";
 import HeroCarousel from "@/components/HeroCarousel";
@@ -9,6 +9,16 @@ import AuthModal from "@/components/AuthModal";
 import BottomNavBar from "@/components/BottomNavBar";
 import { useProducts } from "@/hooks/useProducts";
 
+// Seeded shuffle so products reorder on each page load but stay stable during session
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [category, setCategory] = useState("All");
@@ -16,9 +26,12 @@ const Index = () => {
 
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
 
+  // Shuffle products once when they load, so layout feels fresh each visit
+  const shuffled = useMemo(() => shuffleArray(products), [products]);
+
   const filtered = category === "All"
-    ? products
-    : products.filter((p) => p.category === category);
+    ? shuffled
+    : shuffled.filter((p) => p.category === category);
 
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
