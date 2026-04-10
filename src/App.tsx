@@ -12,6 +12,8 @@ import Orders from "./pages/Orders.tsx";
 import Profile from "./pages/Profile.tsx";
 import Admin from "./pages/Admin.tsx";
 import Wishlist from "./pages/Wishlist.tsx";
+import Privacy from "./pages/Privacy.tsx";
+import Shop from "./pages/Shop.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
