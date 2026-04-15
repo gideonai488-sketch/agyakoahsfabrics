@@ -13,6 +13,7 @@ import Profile from "./pages/Profile.tsx";
 import Admin from "./pages/Admin.tsx";
 import Wishlist from "./pages/Wishlist.tsx";
 import Privacy from "./pages/Privacy.tsx";
+import Deletion from "./pages/Deletion.tsx";
 import Shop from "./pages/Shop.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/deletion" element={<Deletion />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
