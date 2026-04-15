@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import StoreHeader from "@/components/StoreHeader";
 import HeroCarousel from "@/components/HeroCarousel";
+import TrendingSection from "@/components/TrendingSection";
 import CategoryBar from "@/components/CategoryBar";
 import ProductCard from "@/components/ProductCard";
 import CartDrawer from "@/components/CartDrawer";
@@ -40,7 +41,8 @@ const Index = () => {
   return (
     <div className="min-h-screen mesh-bg">
       <StoreHeader />
-      <HeroCarousel />
+      <HeroCarousel products={shuffled} />
+      <TrendingSection products={products} />
       <CategoryBar selected={category} onSelect={setCategory} categories={categories} />
 
       {loading ? (
