@@ -50,18 +50,20 @@ const Index = () => {
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
       ) : (
-        <div className="px-4 mb-3 flex items-center justify-between">
-          <h3 className="text-base font-bold text-foreground">All Products</h3>
-          <span className="text-xs text-muted-foreground">{filtered.length} items</span>
-        </div>
-        <div className="grid grid-cols-2 gap-3 px-4 pb-24">
-          {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-          {filtered.length === 0 && (
-            <p className="col-span-2 py-12 text-center text-sm text-muted-foreground">No products found</p>
-          )}
-        </div>
+        <>
+          <div className="px-4 mb-3 flex items-center justify-between">
+            <h3 className="text-base font-bold text-foreground">All Products</h3>
+            <span className="text-xs text-muted-foreground">{filtered.length} items</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3 px-4 pb-24">
+            {filtered.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+            {filtered.length === 0 && (
+              <p className="col-span-2 py-12 text-center text-sm text-muted-foreground">No products found</p>
+            )}
+          </div>
+        </>
       )}
 
       <CartDrawer />
